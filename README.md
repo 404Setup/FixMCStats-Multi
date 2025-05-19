@@ -2,6 +2,10 @@
 
 Fabric mod that aims to fix some issues with the Minecraft statistics.🤓
 
+This mod is an unofficial port of [FixMCStats Fabric]([https://modrinth.com/mod/fixmcstats](https://modrinth.com/mod/fixmcstats), designed to provide Forge & NeoForge compatibility.
+
+It should be consistent with the upstream behavior.
+
 ---
 ## <u>Fixes</u>
 
