@@ -23,6 +23,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.UUID;
+
 @Mixin(CampfireBlockEntity.class)
 public class CampfireBlockEntityMixin {
 
@@ -31,19 +33,18 @@ public class CampfireBlockEntityMixin {
     // Fix https://bugs.mojang.com/browse/MC-144005
     @Inject(method = "placeFood", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/NonNullList;set(ILjava/lang/Object;)Ljava/lang/Object;", shift = At.Shift.AFTER))
     public void addCookerNBT(ServerLevel world, LivingEntity entity, ItemStack stack, CallbackInfoReturnable<Boolean> cir, @Local int index) {
-        CustomData.update(DataComponents.CUSTOM_DATA, this.items.get(index), nbt -> nbt.store("cooker", UUIDUtil.CODEC, entity.getUUID()));
+        CustomData.update(DataComponents.CUSTOM_DATA, this.items.get(index), nbt -> nbt.putUUID("cooker", entity.getUUID()));
     }
 
     // Fix https://bugs.mojang.com/browse/MC-144005
     @Inject(method = "cookTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/Containers;dropItemStack(Lnet/minecraft/world/level/Level;DDDLnet/minecraft/world/item/ItemStack;)V"))
     private static void ensureHolder(ServerLevel world, BlockPos pos, BlockState state, CampfireBlockEntity blockEntity, RecipeManager.CachedCheck<SingleRecipeInput, CampfireCookingRecipe> recipeMatchGetter, CallbackInfo ci, @Local(ordinal = 0) ItemStack itemStack, @Local(ordinal = 1) ItemStack itemStack2) {
         CustomData nbt = itemStack.getComponents().get(DataComponents.CUSTOM_DATA);
-        if (nbt != null) {
-            nbt.copyTag().read("cooker", UUIDUtil.CODEC).ifPresent(cooker -> {
-                Player playerEntity = world.getServer().getPlayerList().getPlayer(cooker);
+        UUID cooker = nbt != null ? nbt.copyTag().getUUID("cooker") : null;
+        if (cooker != null) {
+            Player playerEntity = world.getServer().getPlayerList().getPlayer(cooker);
 
-                if (playerEntity != null) itemStack2.onCraftedBy(playerEntity, 1);
-            });
+            if (playerEntity != null) itemStack2.onCraftedBy(world, playerEntity, 1);
         }
     }
 }

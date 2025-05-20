@@ -20,7 +20,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
 
     // Fix https://bugs.mojang.com/browse/MC-111435
-    @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hurtServer(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
+    @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)V"))
     private void incrementSweepDamage(Entity target, CallbackInfo ci, @Local(ordinal = 4) float damage) {
         ((Player) (Object) this).awardStat(Stats.DAMAGE_DEALT, Math.round((damage - ((LivingEntity) target).getHealth()) * 10.0f));
     }

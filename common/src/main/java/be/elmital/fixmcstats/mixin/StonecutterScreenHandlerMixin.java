@@ -51,11 +51,11 @@ public abstract class StonecutterScreenHandlerMixin extends AbstractContainerMen
 
             // Here is the fix for bug
             protected void onCrafted(ItemStack stack, int amount) {
-                stack.onCraftedBy(playerInventory.player, amount);
+                stack.onCraftedBy(playerInventory.player.level(), playerInventory.player, amount);
             }
 
             public void onTakeItem(Player player, ItemStack stack) {
-                stack.onCraftedBy(player, stack.getCount());
+                stack.onCraftedBy(player.level(), player, stack.getCount());
                 resultContainer.awardUsedRecipes(player, this.getInputStacks());
                 ItemStack itemStack = inputSlot.remove(1);
                 if (!itemStack.isEmpty()) {

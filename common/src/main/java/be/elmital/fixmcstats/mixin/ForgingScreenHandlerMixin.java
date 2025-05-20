@@ -46,7 +46,7 @@ public abstract class ForgingScreenHandlerMixin extends AbstractContainerMenu {
 
             public void onCrafted(ItemStack stack, int amount) {
                 if (((ItemCombinerMenu) (Object) ForgingScreenHandlerMixin.this) instanceof SmithingMenu)
-                    stack.onCraftedBy(player, amount);
+                    stack.onCraftedBy(player.level(), player, amount);
             }
 
             public boolean canTakeItems(Player playerEntity) {

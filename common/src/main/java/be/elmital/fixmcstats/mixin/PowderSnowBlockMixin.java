@@ -17,7 +17,7 @@ public class PowderSnowBlockMixin {
 
     // Fix https://bugs.mojang.com/browse/MC-121541
     @Inject(method = "fallOn", at = @At(value = "HEAD"))
-    private void incrementOnLanding(Level world, BlockState state, BlockPos pos, Entity entity, double fallDistance, CallbackInfo ci) {
+    private void incrementOnLanding(Level world, BlockState state, BlockPos pos, Entity entity, float fallDistance, CallbackInfo ci) {
         if (fallDistance >= 2.0F && entity instanceof ServerPlayer player) {
             player.awardStat(Stats.FALL_ONE_CM, (int) Math.round(fallDistance * 100.0));
         }
