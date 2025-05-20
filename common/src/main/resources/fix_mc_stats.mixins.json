@@ -21,6 +21,7 @@
     "PowderSnowBlockMixin",
     "RespawnAnchorBlockMixin",
     "ServerPlayerEntityMixin",
+    "ShearsItemMixin",
     "StatsAccessor",
     "StonecutterScreenHandlerMixin"
   ],
