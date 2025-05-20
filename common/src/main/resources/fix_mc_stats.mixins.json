@@ -13,6 +13,7 @@
     "EntityMixin",
     "FlowerPotBlockMixin",
     "ForgingScreenHandlerMixin",
+    "HoneyBlockMixin",
     "LivingEntityMixin",
     "PlaceableOnWaterItemMixin",
     "PlayerEntityMixin",
@@ -22,6 +23,7 @@
     "RespawnAnchorBlockMixin",
     "ServerPlayerEntityMixin",
     "ShearsItemMixin",
+    "SlimeBlockMixin",
     "StatsAccessor",
     "StonecutterScreenHandlerMixin"
   ],
