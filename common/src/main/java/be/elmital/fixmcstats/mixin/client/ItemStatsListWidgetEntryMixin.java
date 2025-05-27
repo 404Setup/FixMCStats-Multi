@@ -23,12 +23,12 @@ public class ItemStatsListWidgetEntryMixin extends ObjectSelectionList<StatsScre
     // Fix https://bugs.mojang.com/browse/MC-139386
     @Redirect(method = "renderDecorations", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/Item;getName()Lnet/minecraft/network/chat/Component;"))
     private Component modifyItemName(Item item) {
-        return Component.empty().append(item.getName()).withStyle(item.getDefaultInstance().getRarity().color());
+        return Component.empty().append(item.getDescription()).withStyle(item.getDefaultInstance().getRarity().color());
     }
 
     // Fix https://bugs.mojang.com/browse/MC-213103
     @Inject(method = "<init>(Lnet/minecraft/client/gui/screens/achievement/StatsScreen;Lnet/minecraft/client/Minecraft;)V", at = @At(value = "TAIL"))
     public void onInit(StatsScreen statsScreen, Minecraft client, CallbackInfo info) {
-        this.children().sort(Comparator.comparing(entry -> entry.getItem().getName().getString()));
+        this.children().sort(Comparator.comparing(entry -> entry.getItem().getDescription().getString()));
     }
 }

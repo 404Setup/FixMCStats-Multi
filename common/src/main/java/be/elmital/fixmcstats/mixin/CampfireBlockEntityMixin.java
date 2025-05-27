@@ -13,6 +13,7 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Final;
@@ -27,18 +28,15 @@ import java.util.UUID;
 
 @Mixin(CampfireBlockEntity.class)
 public class CampfireBlockEntityMixin {
-
-    @Shadow @Final private NonNullList<ItemStack> items;
-
     // Fix https://bugs.mojang.com/browse/MC-144005
-    @Inject(method = "placeFood", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/NonNullList;set(ILjava/lang/Object;)Ljava/lang/Object;", shift = At.Shift.AFTER))
-    public void addCookerNBT(ServerLevel world, LivingEntity entity, ItemStack stack, CallbackInfoReturnable<Boolean> cir, @Local int index) {
-        CustomData.update(DataComponents.CUSTOM_DATA, this.items.get(index), nbt -> nbt.putUUID("cooker", entity.getUUID()));
+    @Inject(method = "placeFood", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;consumeAndReturn(ILnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/item/ItemStack;"))
+    public void addCookerNBT(LivingEntity entity, ItemStack food, int cookTime, CallbackInfoReturnable<ItemStack> cir) {
+        CustomData.update(DataComponents.CUSTOM_DATA, cir.getReturnValue(), nbt -> nbt.putUUID("cooker", entity.getUUID()));
     }
 
     // Fix https://bugs.mojang.com/browse/MC-144005
     @Inject(method = "cookTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/Containers;dropItemStack(Lnet/minecraft/world/level/Level;DDDLnet/minecraft/world/item/ItemStack;)V"))
-    private static void ensureHolder(ServerLevel world, BlockPos pos, BlockState state, CampfireBlockEntity blockEntity, RecipeManager.CachedCheck<SingleRecipeInput, CampfireCookingRecipe> recipeMatchGetter, CallbackInfo ci, @Local(ordinal = 0) ItemStack itemStack, @Local(ordinal = 1) ItemStack itemStack2) {
+    private static void ensureHolder(Level world, BlockPos pos, BlockState state, CampfireBlockEntity blockEntity, CallbackInfo ci, @Local(ordinal = 0) ItemStack itemStack, @Local(ordinal = 1) ItemStack itemStack2) {
         CustomData nbt = itemStack.getComponents().get(DataComponents.CUSTOM_DATA);
         UUID cooker = nbt != null ? nbt.copyTag().getUUID("cooker") : null;
         if (cooker != null) {

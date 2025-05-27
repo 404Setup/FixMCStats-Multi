@@ -12,6 +12,6 @@ public class ItemComparatorMixin {
     // Fix https://bugs.mojang.com/browse/MC-213103
     @Redirect(method = "compare(Lnet/minecraft/client/gui/screens/achievement/StatsScreen$ItemStatisticsList$ItemRow;Lnet/minecraft/client/gui/screens/achievement/StatsScreen$ItemStatisticsList$ItemRow;)I", at = @At(value = "INVOKE", target = "Ljava/lang/Integer;compare(II)I"))
     public int compareEntries(int item1, int item2) {
-        return Item.byId(item1).getName().getString().compareTo(Item.byId(item2).getName().getString());
+        return Item.byId(item1).getDescription().getString().compareTo(Item.byId(item2).getDescription().getString());
     }
 }

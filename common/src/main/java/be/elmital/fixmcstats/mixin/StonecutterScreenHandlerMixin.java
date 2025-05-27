@@ -23,7 +23,7 @@ import java.util.List;
 @Mixin(StonecutterMenu.class)
 public abstract class StonecutterScreenHandlerMixin extends AbstractContainerMenu {
     @Invoker("setupResultSlot")
-    public abstract void invokePopulateResult(int selectedID);
+    public abstract void invokePopulateResult();
 
     @Final @Shadow @Mutable
     Slot resultSlot;
@@ -33,8 +33,6 @@ public abstract class StonecutterScreenHandlerMixin extends AbstractContainerMen
     Slot inputSlot;
     @Shadow
     long lastSoundTime;
-    @Final @Shadow
-    DataSlot selectedRecipeIndex;
 
     protected StonecutterScreenHandlerMixin(@Nullable MenuType<?> type, int syncId) {
         super(type, syncId);
@@ -59,7 +57,7 @@ public abstract class StonecutterScreenHandlerMixin extends AbstractContainerMen
                 resultContainer.awardUsedRecipes(player, this.getInputStacks());
                 ItemStack itemStack = inputSlot.remove(1);
                 if (!itemStack.isEmpty()) {
-                    invokePopulateResult(selectedRecipeIndex.get());
+                    invokePopulateResult();
                 }
 
                 access.execute((world, pos) -> {

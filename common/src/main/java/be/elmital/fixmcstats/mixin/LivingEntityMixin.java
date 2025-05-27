@@ -37,27 +37,20 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
     }
 
     // Fix https://bugs.mojang.com/browse/MC-122656
-    @Inject(method = "updateFallFlying", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V", shift = At.Shift.AFTER))
+    /*@Inject(method = "updateFallFlying", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V", shift = At.Shift.AFTER))
     public void incrementBreakingStat(CallbackInfo ci, @Local EquipmentSlot slot) {
         ItemStack equiped = this.getItemBySlot(slot);
         if (equiped.nextDamageWillBreak()) {
             if (((LivingEntity) (Object) this) instanceof Player player)
                 player.awardStat(Stats.ITEM_BROKEN.get(equiped.getItem()));
         }
-    }
+    }*/
 
     // Fix https://bugs.mojang.com/browse/MC-29519
     @Inject(method = "actuallyHurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getCombatTracker()Lnet/minecraft/world/damagesource/CombatTracker;", shift = At.Shift.AFTER))
-    public void incrementDamageDealtStatForProjectile(ServerLevel world, DamageSource source, float amount, CallbackInfo ci) {
+    public void incrementDamageDealtStatForProjectile(DamageSource source, float amount, CallbackInfo ci) {
         if ((source.is(DamageTypeTags.IS_PROJECTILE) || source.getDirectEntity() instanceof FireworkRocketEntity) && source.getEntity() instanceof ServerPlayer player) {
             player.awardStat(Stats.DAMAGE_DEALT, Math.round(Math.min(this.getHealth(), amount) * 10.0F));
         }
-    }
-
-    // Fix https://bugs.mojang.com/browse/MC-265376
-    @Inject(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/DamageSource;is(Lnet/minecraft/tags/TagKey;)Z", ordinal = 5))
-    public void onDamage(ServerLevel world, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if ((Object) this instanceof ServerPlayer pl && isDeadOrDying() && source.getDirectEntity() instanceof Goat goat)
-            pl.awardStat(Stats.ENTITY_KILLED_BY.get(goat.getType()), 1);
     }
 }

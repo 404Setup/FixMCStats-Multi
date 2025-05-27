@@ -35,11 +35,4 @@ public abstract class ServerPlayerEntityMixin extends Player {
             return StatisticUtils.CRAWL_ONE_CM.identifier();
         return identifier;
     }
-
-    // Fix https://bugs.mojang.com/browse/MC-211938
-    @Redirect(method = "jumpFromGround", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;awardStat(Lnet/minecraft/resources/ResourceLocation;)V"))
-    public void incrementStat(ServerPlayer instance, ResourceLocation identifier) {
-        if (!(instance.getInBlockState().getBlock() instanceof ScaffoldingBlock))
-            instance.awardStat(identifier);
-    }
 }

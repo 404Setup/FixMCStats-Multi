@@ -42,8 +42,6 @@ public class BlockMixin {
                 return Stats.BLOCK_MINED.get(Blocks.JUNGLE_SIGN);
             else if (wallSignBlock.type().equals(WoodType.DARK_OAK))
                 return Stats.BLOCK_MINED.get(Blocks.DARK_OAK_SIGN);
-            else if (wallSignBlock.type().equals(WoodType.PALE_OAK))
-                return Stats.BLOCK_MINED.get(Blocks.PALE_OAK_SIGN);
             else if (wallSignBlock.type().equals(WoodType.CRIMSON))
                 return Stats.BLOCK_MINED.get(Blocks.CRIMSON_SIGN);
             else if (wallSignBlock.type().equals(WoodType.WARPED))
